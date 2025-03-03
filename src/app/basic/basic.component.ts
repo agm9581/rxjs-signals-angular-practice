@@ -35,15 +35,12 @@ export class BasicComponent implements OnInit, OnDestroy {
     });
 
     // this is deprecated but also valid
+    //Updated so even if deprecated shows it works in console
     this.subFrom = from([1, 2, 3, 5]).subscribe(
-      (item) => {
-        return item;
-      },
-      (err) => {
-        return err;
-      },
+      (item) => console.log(item),
+      (err) => console.log(err),
       () => {
-        return 'complete';
+        console.log('complete');
       }
     );
   }
