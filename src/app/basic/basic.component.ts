@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { from, of, Subscription } from 'rxjs';
+import { from, fromEvent, of, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-basic',
@@ -10,6 +10,7 @@ export class BasicComponent implements OnInit, OnDestroy {
   sub!: Subscription;
   subArray!: Subscription;
   subFrom!: Subscription;
+  subEvent!: Subscription;
   ngOnInit(): void {
     //subscribe will pass the value receive as a whole, in this case 2, then 4 and then 6
     this.sub = of(2, 4, 6).subscribe((item) =>
@@ -43,6 +44,12 @@ export class BasicComponent implements OnInit, OnDestroy {
         console.log('complete');
       }
     );
+
+    this.subEvent = fromEvent(document, 'click').subscribe({
+      next: (ev) => console.log('Click event', ev.target),
+      error: (err) => console.log('Found an error on click'),
+      complete: () => console.log('Finished'),
+    });
   }
   ngOnDestroy(): void {
     this.sub.unsubscribe();
