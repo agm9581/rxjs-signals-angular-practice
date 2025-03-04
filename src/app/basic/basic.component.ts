@@ -11,6 +11,7 @@ export class BasicComponent implements OnInit, OnDestroy {
   subArray!: Subscription;
   subFrom!: Subscription;
   subEvent!: Subscription;
+  keyEvent!: Subscription;
   ngOnInit(): void {
     //subscribe will pass the value receive as a whole, in this case 2, then 4 and then 6
     this.sub = of(2, 4, 6).subscribe((item) =>
@@ -49,6 +50,15 @@ export class BasicComponent implements OnInit, OnDestroy {
       next: (ev) => console.log('Click event', ev.target),
       error: (err) => console.log('Found an error on click'),
       complete: () => console.log('Finished'),
+    });
+
+    const pressedKeys: string[] = [];
+    //Event occurs in document and event type is key down, for more events https://developer.mozilla.org/en-US/docs/Web/API/Element#events
+    this.keyEvent = fromEvent(document, 'keydown').subscribe({
+      next: (ev) => {
+        pressedKeys.push((ev as KeyboardEvent).key);
+        console.log('Key event:', pressedKeys);
+      },
     });
   }
   ngOnDestroy(): void {
