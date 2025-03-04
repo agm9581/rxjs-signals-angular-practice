@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { from, fromEvent, map, of, Subscription } from 'rxjs';
+import { from, fromEvent, map, of, Subscription, tap } from 'rxjs';
 
 @Component({
   selector: 'app-basic',
@@ -74,8 +74,18 @@ export class BasicComponent implements OnInit, OnDestroy {
       .subscribe((x) => console.log('Apple:', x));
 
     const numbers$ = of(1, 2, 3, 4, 5)
-      .pipe(map((n) => n * 2))
+      .pipe(
+        map((n) => n * 2),
+        tap((v) => console.log('Map x2 on tap:', v))
+      )
       .subscribe((x) => console.log('Map x2:', x));
+
+    this.subApples = apples$
+      .pipe(
+        map((a) => ({ ...a, color: 'red' })),
+        tap((v) => console.log(v))
+      )
+      .subscribe();
   }
   ngOnDestroy(): void {
     this.sub.unsubscribe();
