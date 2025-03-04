@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { from, fromEvent, of, Subscription } from 'rxjs';
+import { from, fromEvent, map, of, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-basic',
@@ -12,6 +12,8 @@ export class BasicComponent implements OnInit, OnDestroy {
   subFrom!: Subscription;
   subEvent!: Subscription;
   keyEvent!: Subscription;
+  subApples!: Subscription;
+  subNumbers!: Subscription;
   ngOnInit(): void {
     //subscribe will pass the value receive as a whole, in this case 2, then 4 and then 6
     this.sub = of(2, 4, 6).subscribe((item) =>
@@ -60,10 +62,25 @@ export class BasicComponent implements OnInit, OnDestroy {
         console.log('Key event:', pressedKeys);
       },
     });
+
+    const apples$ = from([
+      { id: 1, type: 'macintosh' },
+      { id: 2, type: 'gala' },
+      { id: 3, type: 'fuji' },
+    ]);
+
+    this.subApples = apples$
+      .pipe(map((a) => ({ ...a, color: 'red' })))
+      .subscribe((x) => console.log('Apple:', x));
+
+    const numbers$ = of(1, 2, 3, 4, 5)
+      .pipe(map((n) => n * 2))
+      .subscribe((x) => console.log('Map x2:', x));
   }
   ngOnDestroy(): void {
     this.sub.unsubscribe();
     this.subArray.unsubscribe();
     this.subFrom.unsubscribe();
+    this.subApples.unsubscribe();
   }
 }
