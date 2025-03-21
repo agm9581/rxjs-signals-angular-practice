@@ -1,5 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { from, fromEvent, map, of, Subscription, tap } from 'rxjs';
+import {
+  filter,
+  from,
+  fromEvent,
+  map,
+  of,
+  Subscription,
+  take,
+  tap,
+  timer,
+} from 'rxjs';
 
 @Component({
   selector: 'app-basic',
@@ -14,6 +24,9 @@ export class BasicComponent implements OnInit, OnDestroy {
   keyEvent!: Subscription;
   subApples!: Subscription;
   subNumbers!: Subscription;
+  subFilter!: Subscription;
+  subTake!: Subscription;
+  subTimer!: Subscription;
   ngOnInit(): void {
     //subscribe will pass the value receive as a whole, in this case 2, then 4 and then 6
     this.sub = of(2, 4, 6).subscribe((item) =>
@@ -86,6 +99,29 @@ export class BasicComponent implements OnInit, OnDestroy {
         tap((v) => console.log(v))
       )
       .subscribe();
+
+    this.subFilter = apples$
+      .pipe(
+        filter((apple) => apple.type == 'gala'),
+        tap((x) => console.log('Only gala Apples', x))
+      )
+      .subscribe();
+
+    this.subTake = apples$
+      .pipe(
+        take(2),
+        filter((x) => x.id % 2 == 0),
+        tap((x) => console.log('Apple with even id', x))
+      )
+      .subscribe();
+
+    this.subTimer = timer(0, 1000)
+      .pipe(take(5))
+      .subscribe({
+        next: (item) => console.log('Timer', item),
+        error: (err) => console.log('Timer error occured', err),
+        complete: () => console.log('No more ticks'),
+      });
   }
   ngOnDestroy(): void {
     this.sub.unsubscribe();
