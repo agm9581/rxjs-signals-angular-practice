@@ -128,5 +128,8 @@ export class BasicComponent implements OnInit, OnDestroy {
     this.subArray.unsubscribe();
     this.subFrom.unsubscribe();
     this.subApples.unsubscribe();
+    this.subFilter.unsubscribe();
+    this.subTake.unsubscribe();
+    this.subTimer.unsubscribe();
   }
 }
